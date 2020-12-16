@@ -1,6 +1,6 @@
 # Transformers WSD
 
-This repo hosts the classification library we used in:
+This repo hosts the classification library we used in [MuLaN](https://github.com/SapienzaNLP/mulan); if you find our work useful, consider citing us:
 ```
 @inproceedings{ijcai2020-531,
   title     = {Mu{L}a{N}: Multilingual Label propagatio{N} for Word Sense Disambiguation},
@@ -47,8 +47,8 @@ PYTHONPATH=src/ python src/scripts/eval/raganato_eval.py experiments/semcor-zero
 
 # Contacts
 For any question either open an issue on github or contact:
-barba\[at\]di\[dot\]uniroma1\[dot\]it (Edoardo Barba)
-procopio\[at\]di\[dot\]uniroma1\[dot\]it (Luigi Procopio)
+* [Edoardo Barba](mailto:barba@di.uniroma1.it)
+* [Luigi Procopio](mailto:procopio@di.uniroma1.it)
 
 # License
 All data and codes provided in this repository are subject to the  Attribution-Non Commercial-ShareAlike 4.0 International license (CC BY-NC 4.0).
