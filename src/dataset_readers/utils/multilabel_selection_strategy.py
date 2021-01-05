@@ -5,6 +5,7 @@
 # License: Attribution-NonCommercial-ShareAlike 4.0 International
 #
 
+import random
 from typing import List
 
 from allennlp.common import Registrable
@@ -21,3 +22,10 @@ class AlwaysFirstMultiLabelSelectionStrategy(MultiLabelSelectionStrategy):
 
     def select(self, labels: List[str]) -> str:
         return labels[0]
+
+
+@MultiLabelSelectionStrategy.register('random')
+class RandomMultiLabelSelectionStrategy(MultiLabelSelectionStrategy):
+
+    def select(self, labels: List[str]) -> str:
+        return random.choice(labels)
