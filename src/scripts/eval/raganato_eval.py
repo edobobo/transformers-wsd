@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 def load_eval_dataset(
         eval_dataset_prefix: str,
         wsd_instance_conversion_strategy: Optional[WSDInstanceConversionStrategy] = None
-) -> Tuple[List[List[AnnotatedToken]], List[List[Optional[Set[str]]]]]:
+) -> Tuple[List[List[AnnotatedToken]], List[List[Optional[Tuple[str, Set[str]]]]]]:
 
     if wsd_instance_conversion_strategy is None:
         wsd_instance_conversion_strategy = IdentityWSDInstanceConversionStrategy()
@@ -50,7 +50,7 @@ def load_eval_dataset(
 
         dataset_annotated_sentences.append(sentence_annotated_tokens)
         dataset_gold_labels.append(
-            [set(wsd_instance.labels) if wsd_instance.labels is not None else None for wsd_instance in raganato_sentence])
+            [(wsd_instance.instance_id, set(wsd_instance.labels)) if wsd_instance.labels is not None else None for wsd_instance in raganato_sentence])
 
     return dataset_annotated_sentences, dataset_gold_labels
 
@@ -78,6 +78,7 @@ def produce_gs_predictions(disambiguator: Disambiguator, eval_dataset_prefix: st
     mask = [[_l is not None for _l in l] for l in dataset_gold_labels]
     dataset_predicted_labels = _batch_predict(disambiguator, dataset_annotated_sentences, mask=mask, batch_size=batch_size, cut_senses=cut_senses)
 
+    ids = dict()
     gs = dict()
     predictions = dict()
     n_instances = 0
@@ -92,7 +93,10 @@ def produce_gs_predictions(disambiguator: Disambiguator, eval_dataset_prefix: st
             if sgl is None:
                 continue
 
+            sid, sgl = sgl
+
             n_instances += 1
+            ids[(i, j)] = sid 
             gs[(i, j)] = sgl
 
             if spl is None:
@@ -100,7 +104,7 @@ def produce_gs_predictions(disambiguator: Disambiguator, eval_dataset_prefix: st
 
             predictions[(i, j)] = spl
 
-    return gs, predictions, n_instances
+    return ids, gs, predictions, n_instances
 
 
 class ScoresBag(NamedTuple):
@@ -115,7 +119,7 @@ class ScoresBag(NamedTuple):
 
 def _compute_scores(Disambiguator: Disambiguator, eval_dataset_path: str, batch_size: int, cut_senses: bool, wsd_instance_conversion_strategy: WSDInstanceConversionStrategy, f_dump_system_response: Optional[TextIO]) -> ScoresBag:
 
-    gs, predictions, n_instances = produce_gs_predictions(Disambiguator, eval_dataset_path, batch_size, cut_senses, wsd_instance_conversion_strategy)
+    ids, gs, predictions, n_instances = produce_gs_predictions(Disambiguator, eval_dataset_path, batch_size, cut_senses, wsd_instance_conversion_strategy)
 
     ok, notok = 0, 0
 
@@ -132,7 +136,7 @@ def _compute_scores(Disambiguator: Disambiguator, eval_dataset_path: str, batch_
             notok += 1
 
         if f_dump_system_response is not None:
-            f_dump_system_response.write(f'{eval_dataset_path.split("/")[-1]}.{pred_key}\t{pred_synset}\t{",".join(gs_synsets)}\n')
+            f_dump_system_response.write(f'{eval_dataset_path.split("/")[-1]}.{ids[pred_key]}\t{pred_synset}\t{",".join(gs_synsets)}\n')
 
     precision = ok / (ok + notok)
     recall = ok / len(gs.keys())
