@@ -13,6 +13,15 @@
         "en-semeval2007": [["en", "data/datasets/eval/semeval2007/semeval2007"]],
         "en-all-overall": [["en", "data/datasets/eval/ALL/ALL"]],
 
+        "multilingual-semeval": [
+            ["it", "data/datasets/eval/multilingual_wsd_wn_v1.0/semeval2013-it/semeval2013-it"],
+            ["es", "data/datasets/eval/multilingual_wsd_wn_v1.0/semeval2013-es/semeval2013-es"],
+            ["fr", "data/datasets/eval/multilingual_wsd_wn_v1.0/semeval2013-fr/semeval2013-fr"],
+            ["de", "data/datasets/eval/multilingual_wsd_wn_v1.0/semeval2013-de/semeval2013-de"],
+            ["it", "data/datasets/eval/multilingual_wsd_wn_v1.0/semeval2015-it/semeval2015-it"],
+            ["es", "data/datasets/eval/multilingual_wsd_wn_v1.0/semeval2015-es/semeval2015-es"]
+        ],
+
         "multilingual-semeval13": [
             ["it", "data/datasets/eval/multilingual_wsd_wn_v1.0/semeval2013-it/semeval2013-it"],
             ["es", "data/datasets/eval/multilingual_wsd_wn_v1.0/semeval2013-es/semeval2013-es"],
@@ -43,7 +52,9 @@
         "multilingual-semeval-es": [
             ["es", "data/datasets/eval/multilingual_wsd_wn_v1.0/semeval2013-es/semeval2013-es"],
             ["es", "data/datasets/eval/multilingual_wsd_wn_v1.0/semeval2015-es/semeval2015-es"]
-        ]
+        ],
+        "multilingual-semeval-fr": [["fr", "data/datasets/eval/multilingual_wsd_wn_v1.0/semeval2013-fr/semeval2013-fr"]],
+        "multilingual-semeval-de": [["de", "data/datasets/eval/multilingual_wsd_wn_v1.0/semeval2013-de/semeval2013-de"]]
 
     }
 
