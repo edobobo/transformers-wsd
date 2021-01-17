@@ -59,6 +59,9 @@ class RaganatoDatasetReader(DatasetReader):
 
             # extract tokens
             tokens = [instance.annotated_token.text for instance in sentence]
+            if any(len(t) > 50 for t in tokens):
+                logger.info(f'Skipping sentence as a token was too long (in char): {tokens}')
+                continue
 
             # extract labels
             labels = []
@@ -76,18 +79,15 @@ class RaganatoDatasetReader(DatasetReader):
                 discarded_due_to_min_length += 1
                 if discarded_due_to_min_length % 1000 == 0:
                     logger.info(f'{discarded_due_to_min_length} samples have been discarded due to being shorter than min length {self._min_length}')
+                continue
 
             if self._max_length != -1 and length > self._max_length:
                 discarded_due_to_max_length += 1
                 if discarded_due_to_max_length % 1000 == 0:
                     logger.info(f'{discarded_due_to_max_length} samples have been discarded due to being longer than max length {self._max_length}')
+                continue
             
             yield instance
-
-            # try:
-            #     yield self.text_to_instance(tokens, sentence_id=f'{file_path}/{i}', labels=labels)
-            # except Exception as e:
-            #     continue
 
         logger.info(f'{discarded_due_to_min_length} samples have been discarded due to being shorter than min length {self._min_length}')
         logger.info(f'{discarded_due_to_max_length} samples have been discarded due to being longer than max length {self._max_length}')
